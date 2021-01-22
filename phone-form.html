@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Take Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .jumbotron {
+            background-color: #fff;
+        }
+
+        legend {
+            color: #036;
+            text-align: center;
+        }
+
+        input#phoneNumber {
+            color: #333;
+            border: #808080;
+        }
+
+        input#phoneNumber.form-control.is-invalid {
+            border: 1px solid red;
+            box-shadow: 2px 5px 5px red;
+        }
+        input#phoneNumber.form-control.is-valid {
+            border: 1px solid green;
+            box-shadow: 2px 5px 5px green;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron jumbotron-fluid">
+            <h1 class="display-4">Isaac Watts: Sample Form and Validation</h1>
+        </div>
+        <form class="was-validated" id="phoneForm" novalidate>
+            <fieldset form="phone-form">
+                <div class="form-group form-inline">
+                    <legend>Phone Number Entry.</legend>
+                    <div class="form-row">
+                        <label for="phoneNumber">Contact Number</label>
+                        <input type="tel" maxlength="14" onkeydown="phoneNumberFormatter()"
+                            onblur="phoneNumberFormatter()" class="form-control" id="phoneNumber"
+                            placeholder="(000)000-0000)" pattern="^\(\d{3}\)\s\d{3}-\d{4}" required>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</body>
+<footer>
+    <script>
+        $(function () {
+            validateCheck();
+        });
+
+        function validateCheck() {
+            $('#phoneNumber').on('focusout', function () {
+                $(this).removeClass('is-valid is-invalid')
+                    .addClass(this.checkValidity() ? 'is-valid' : 'is-invalid');
+            });
+        }
+        function formatPhone(phone) {
+            if (!phone) return phone;
+            const cleanPhone = phone.replace(/[^\d]/g, "");
+            const phoneLength = cleanPhone.length;
+            //phonelength +1 to delay for bug handling
+            if (phoneLength < 4) return cleanPhone;
+            if (phoneLength < 7) {
+                return `(${cleanPhone.slice(0, 3)}) ${cleanPhone.slice(3)}`;
+            }
+            const formattedNumber = `(${cleanPhone.slice(0, 3)}) ${cleanPhone.slice(3, 6)}-${cleanPhone.slice(6, 10)}`;
+            return formattedNumber;
+        }
+        function phoneNumberFormatter() {
+            const phoneInput = document.getElementById("phoneNumber");
+            const formattedPhone = formatPhone(phoneInput.value);
+            phoneInput.value = formattedPhone;
+            if (phoneInput.value.length >= 10) {
+                validateCheck();
+            }
+        }
+    </script>
+</footer>
+
+</html>
